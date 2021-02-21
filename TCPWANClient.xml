@@ -1,0 +1,110 @@
+<?xml version="1.0"?>
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://community.rti.com/schema/6.0.1/rti_routing_service.xsd">
+
+    <routing_service name="TCPWANClient">
+        <!-- Derived from rti_workspace/examples/routing_service/shapes/tcp_transport.xml -->
+        <annotation>
+            <documentation>
+                Routes between TCP and a local domain. The TCP peer needs to be accessible
+                by the client machine but the client machine does not need to be accessible
+                by the TCP peer (i.e. asymmetric NAT configuration). Please make sure to
+                include a `tcpv4_wan://` entry in the `NDDS_DISCOVERY_PEERS` environment variable.
+                Please see "Asymmetric Communication Across NATs" in the user manual for more info:
+                https://community.rti.com/static/documentation/connext-dds/5.3.1/doc/manuals/routing_service/RTI_Routing_Service_UsersManual.pdf
+                Please make sure the `DOMAIN_ID` parameter is set.
+            </documentation>
+        </annotation>
+
+        <domain_route name="DR_TCPWAN_UPDLAN">
+
+            <participant name="1">
+                <domain_id>1</domain_id>
+                <participant_qos>
+                    <transport_builtin>
+                        <mask>MASK_NONE</mask>
+                    </transport_builtin>
+                    <property>
+                        <value>
+                            <element>
+                                <name>dds.transport.load_plugins</name>
+                                <value>dds.transport.TCPv4.tcp1</value>
+                            </element>
+                            <element>
+                                <name>dds.transport.TCPv4.tcp1.library</name>
+                                <value>nddstransporttcp</value>
+                            </element>
+                            <element>
+                                <name>dds.transport.TCPv4.tcp1.create_function</name>
+                                <value>NDDS_Transport_TCPv4_create</value>
+                            </element>
+                            <element>
+                                <name>
+                                    dds.transport.TCPv4.tcp1.parent.classid
+                                </name>
+                                <value>
+                                    NDDS_TRANSPORT_CLASSID_TCPV4_WAN
+                                </value>
+                            </element>
+                            <element>
+                                <name>
+                                    dds.transport.TCPv4.tcp1.server_bind_port
+                                </name>
+                                <!-- 0 here means that we have an asymmetric connection,
+                                    i.e. we don't need to be accessible by the peer -->
+                                <value>0</value>
+                            </element>
+                            <element>
+                                <name>
+                                    dds.transport.TCPv4.tcp1.disable_nagle
+                                </name>
+                                <value>1</value>
+                            </element>
+                        </value>
+                    </property>
+                    <discovery_config>
+                        <!--
+                            Send more frequent liveliness assertions so that reconnection is faster (default is 30 seconds).
+                            https://community.rti.com/static/documentation/connext-dds/5.3.0/doc/manuals/connext_dds/html_files/RTI_ConnextDDS_CoreLibraries_UsersManual/Content/UsersManual/DISCOVERY_CONFIG_Qos.htm
+                        -->
+                        <participant_liveliness_assert_period>
+                            <sec>1</sec>
+                            <nanosec>0</nanosec>
+                        </participant_liveliness_assert_period>
+                    </discovery_config>
+                </participant_qos>
+            </participant>
+
+            <participant name="2">
+                <domain_id>$(DOMAIN_ID)</domain_id>
+            </participant>
+
+            <session name="Session">
+                <auto_topic_route name="AllForward">
+                    <publish_with_original_info>true</publish_with_original_info>
+                    <input participant="1">
+                        <creation_mode>ON_DOMAIN_AND_ROUTE_MATCH</creation_mode>
+                        <deny_topic_name_filter>rti/*</deny_topic_name_filter>
+                    </input>
+                    <output>
+                        <creation_mode>ON_DOMAIN_MATCH</creation_mode>
+                        <deny_topic_name_filter>rti/*</deny_topic_name_filter>
+                    </output>
+                </auto_topic_route>
+
+                <auto_topic_route name="AllBackward">
+                    <publish_with_original_info>true</publish_with_original_info>
+                    <input participant="2">
+                        <creation_mode>ON_DOMAIN_MATCH</creation_mode>
+                        <deny_topic_name_filter>rti/*</deny_topic_name_filter>
+                    </input>
+                    <output>
+                        <creation_mode>ON_DOMAIN_AND_ROUTE_MATCH</creation_mode>
+                        <deny_topic_name_filter>rti/*</deny_topic_name_filter>
+                    </output>
+                </auto_topic_route>
+            </session>
+
+        </domain_route>
+
+    </routing_service>
+</dds>

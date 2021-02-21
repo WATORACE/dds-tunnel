@@ -1,0 +1,6 @@
+// Generate xml using `rtiddsgen -convertToXml HeartbeatType.idl`
+enum MessageType { HEARTBEAT = 0, ACK = 1 };
+struct Heartbeat {
+  int64 seq;
+  MessageType type;
+};

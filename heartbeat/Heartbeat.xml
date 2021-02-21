@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Derived from https://github.com/rticommunity/rticonnextdds-connector-py/blob/b84f8ea25231b5da47bbc122955439ece500620e/examples/python/ShapeExample.xml -->
+<!-- Pleae make sure to set the `HEARTBEAT_DOMAIN_ID` environment variable when using this xml config file -->
+<dds xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://community.rti.com/schema/6.0.0/rti_dds_profiles.xsd" version="6.0.0">
+  <qos_library name="QosLibrary">
+    <qos_profile name="DefaultProfile" base_name="BuiltinQosLib::Generic.StrictReliable" is_default_qos="true">
+      <participant_qos>
+        <participant_name>
+          <name>Heartbeat participant</name>
+        </participant_name>
+      </participant_qos>
+    </qos_profile>
+  </qos_library>
+  <!-- Below is generated using `rtiddsgen -convertToXml HeartbeatType.idl` -->
+  <types xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:////opt/rti_connext_dds-6.0.1/bin/../resource/app/app_support/rtiddsgen/schema/rti_dds_topic_types.xsd">
+    <enum name="MessageType">
+      <enumerator name="HEARTBEAT" value="0" />
+      <enumerator name="ACK" value="1" />
+    </enum>
+    <struct name="Heartbeat">
+      <member name="seq" type="int64" />
+      <member name="type" type="nonBasic" nonBasicTypeName="MessageType" />
+    </struct>
+  </types>
+
+  <domain_library name="HeartbeatDomainLibrary">
+    <domain name="HeartbeatDomain" domain_id="$(HEARTBEAT_DOMAIN_ID)">
+      <register_type name="Heartbeat" type_ref="Heartbeat" />
+      <topic name="heartbeat" register_type_ref="Heartbeat" />
+    </domain>
+  </domain_library>
+
+  <domain_participant_library name="HeartbeatParticipantLibrary">
+    <domain_participant name="HeartbeatParticipant" domain_ref="HeartbeatDomainLibrary::HeartbeatDomain">
+      <publisher name="HeartbeatPublisher">
+        <data_writer name="HeartbeatWriter" topic_ref="heartbeat" />
+      </publisher>
+      <subscriber name="HeartbeatSubscriber">
+        <data_reader name="HeartbeatReader" topic_ref="heartbeat" />
+      </subscriber>
+    </domain_participant>
+  </domain_participant_library>
+</dds>
