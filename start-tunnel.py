@@ -142,7 +142,7 @@ def tcpwanclient(args):
             # until we terminate the subprocess)
             # https://stackoverflow.com/a/107717/4527337
             heartbeat_proc = popen_nonblocking([
-                sys.executable, '-u', HEARTBEAT_PY, '--domain_id', str(args.domain_id), 'initiator'
+                sys.executable, '-u', HEARTBEAT_PY, '--domain_id', str(args.domain_id), args.heartbeat_type
             ], stdout=PIPE, stderr=PIPE)
             procs.append({'name': 'heartbeat', **heartbeat_proc})
 
@@ -176,6 +176,8 @@ server_parser.add_argument('--public_address', '-a',
 client_parser.set_defaults(func=tcpwanclient)
 client_parser.add_argument('--server_address', '-a',
                            help="the address of the server (e.g. 1.2.3.4:7500)", required=True)
+client_parser.add_argument('--heartbeat_type', '-t',
+                           help="The type of the heartbeat (default: initiator)", choices=["initiator", "responder"], default="initiator")
 
 args = parser.parse_args()
 print(args)
