@@ -1,8 +1,9 @@
 # DDS Tunnel
 
-Scripts in this file set up DDS Tunnels between machines in the current configurations (more to be added):
+Set up DDS Tunnels between computers behind NATs.
 
 1. [Asymmetric NAT](#asymmetric-nat)
+1. [Symmetric NAT](#symmetric-nat)
 
 ### Asymmetric NAT
 
@@ -42,15 +43,13 @@ python3 start-tunnel.py --domain_id 31 client --server_address=1.2.3.4:7400
 Heartbeats are sent from `TCPWANClient` to `TCPWANServer` periodically to check the health and latency of the connection. If you'd like to disable the heartbeat feature, add `--no-heartbeat` to the end of the script invocation.
 
 
-### Relay Bridge
+### Symmetric NAT
 
-This configuration is for two computers behind firewalls that do not support port-forwarding. This setup requires a relay bridge machine accessible by both computers.
+This configuration is for two computers behind firewalls that do not support port-forwarding. This setup **requires a relay bridge** accessible by both computers.
 
 #### Example
 
 Relay Bridge:
-
-Please use an existing relay bridge or follow the [instructions](../relay-bridge) to set one up.
 
 Suppose that we have a bridge set up at `172.31.93.114` that exposes ports `7500` and `7501`.
 
@@ -67,3 +66,4 @@ python3 rti/dds-tunnel/start-tunnel.py --domain_id 35 client --server_address 17
 ```
 
 - The `--heartbeat_type` parameter is interchangeable, as long as one of them is an initiator and the other a responder.
+
