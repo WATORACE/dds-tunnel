@@ -3,18 +3,26 @@ import argparse
 import os
 import signal
 import sys
-import time
-from queue import Queue, Empty
-from subprocess import Popen, PIPE
+from queue import Empty, Queue
+from subprocess import PIPE, Popen
 from threading import Thread
 
+
+def environment_or_default(env_var_name, posix_default, nt_default):
+    if env_var_name in os.environ:
+        return os.environ[env_var_name]
+    elif os.name == 'posix':
+        return posix_default
+    elif os.name == 'nt':
+        return nt_default
+    raise Exception(f"Unknown os {os.name}")
+
+
+NDDS_HOME = environment_or_default('NDDS_HOME', '/opt/rti_connext_dds-6.0.1', 'C:\\Program Files\\rti_connext_dds-6.0.1')
+ROUTING_SERVICE_EXEC = environment_or_default('ROUTING_SERVICE_EXEC', os.path.join(NDDS_HOME, 'bin/rtiroutingservice'), os.path.join(NDDS_HOME, 'bin\\rtiroutingservice.bat'))
 if os.name == 'posix':
-    NDDS_HOME = '/opt/rti_connext_dds-6.0.1'
-    ROUTING_SERVICE_EXEC = os.path.join(NDDS_HOME, 'bin/rtiroutingservice')
     INT_SIGNAL = signal.SIGINT
 elif os.name == 'nt':
-    NDDS_HOME = 'C:\\Program Files\\rti_connext_dds-6.0.1'
-    ROUTING_SERVICE_EXEC = os.path.join(NDDS_HOME, 'bin\\rtiroutingservice.bat')
     INT_SIGNAL = signal.CTRL_BREAK_EVENT
 else:
     raise Exception(f"Unknown os {os.name}")
