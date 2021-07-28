@@ -18,7 +18,7 @@ def environment_or_default(env_var_name, posix_default, nt_default):
     raise Exception(f"Unknown os {os.name}")
 
 
-NDDS_HOME = environment_or_default('NDDS_HOME', '/opt/rti_connext_dds-6.0.1', 'C:\\Program Files\\rti_connext_dds-6.0.1')
+NDDS_HOME = environment_or_default('NDDSHOME', '/opt/rti_connext_dds-6.0.1', 'C:\\Program Files\\rti_connext_dds-6.0.1')
 ROUTING_SERVICE_EXEC = environment_or_default('ROUTING_SERVICE_EXEC', os.path.join(NDDS_HOME, 'bin/rtiroutingservice'), os.path.join(NDDS_HOME, 'bin\\rtiroutingservice.bat'))
 if os.name == 'posix':
     INT_SIGNAL = signal.SIGINT
