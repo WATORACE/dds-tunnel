@@ -80,11 +80,11 @@
                     <publish_with_original_info>true</publish_with_original_info>
                     <input participant="1">
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
-                        <creation_mode>ON_DOMAIN_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                     </input>
                     <output>
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
-                        <creation_mode>ON_DOMAIN_OR_ROUTE_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                     </output>
                 </auto_topic_route>
 
@@ -92,11 +92,11 @@
                     <publish_with_original_info>true</publish_with_original_info>
                     <input participant="2">
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
-                        <creation_mode>ON_DOMAIN_OR_ROUTE_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                     </input>
                     <output>
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
-                        <creation_mode>ON_DOMAIN_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                     </output>
                 </auto_topic_route>
             </session>

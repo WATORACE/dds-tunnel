@@ -82,11 +82,11 @@
                 <auto_topic_route name="AllForward">
                     <publish_with_original_info>true</publish_with_original_info>
                     <input participant="1">
-                        <creation_mode>ON_DOMAIN_AND_ROUTE_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
                     </input>
                     <output>
-                        <creation_mode>ON_DOMAIN_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
                     </output>
                 </auto_topic_route>
@@ -94,11 +94,11 @@
                 <auto_topic_route name="AllBackward">
                     <publish_with_original_info>true</publish_with_original_info>
                     <input participant="2">
-                        <creation_mode>ON_DOMAIN_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
                     </input>
                     <output>
-                        <creation_mode>ON_DOMAIN_AND_ROUTE_MATCH</creation_mode>
+                        <creation_mode>IMMEDIATE</creation_mode>
                         <deny_topic_name_filter>rti/*</deny_topic_name_filter>
                     </output>
                 </auto_topic_route>
